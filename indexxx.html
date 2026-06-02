@@ -1,0 +1,212 @@
+```html
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Информатика Викторина</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Segoe UI,sans-serif;
+}
+
+body{
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:
+    linear-gradient(rgba(0,0,0,0.55),rgba(0,0,0,0.55)),
+    url('https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1600&q=80');
+    background-size:cover;
+    background-position:center;
+}
+
+.container{
+    text-align:center;
+    width:90%;
+    max-width:900px;
+}
+
+h1{
+    color:white;
+    font-size:55px;
+    text-shadow:0 0 20px cyan;
+    margin-bottom:25px;
+}
+
+button{
+    padding:15px 40px;
+    font-size:22px;
+    border:none;
+    border-radius:12px;
+    cursor:pointer;
+    font-weight:bold;
+    margin:10px;
+}
+
+.start{
+    background:linear-gradient(45deg,#00a2ff,#00ffcc);
+    color:white;
+}
+
+.retry{
+    background:linear-gradient(45deg,#ff9800,#ff5722);
+    color:white;
+    display:none;
+}
+
+.cards{
+    display:none;
+    justify-content:center;
+    gap:15px;
+    flex-wrap:wrap;
+    margin-top:20px;
+}
+
+.card{
+    width:110px;
+    height:110px;
+    background:white;
+    border-radius:15px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:30px;
+    font-weight:bold;
+    transition:0.3s;
+}
+
+.selected{
+    background:gold;
+    transform:scale(1.2);
+}
+
+.question{
+    display:none;
+    margin-top:25px;
+    padding:20px;
+    background:white;
+    border-radius:15px;
+    font-size:24px;
+    font-weight:600;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>💻 ИНФОРМАТИКА ВИКТОРИНА</h1>
+
+<button class="start" onclick="startGame()">БАСТАУ</button>
+<button class="retry" onclick="restartGame()">ҚАЙТА БАСТАУ</button>
+
+<div class="cards" id="cards">
+    <div class="card">10</div>
+    <div class="card">20</div>
+    <div class="card">30</div>
+    <div class="card">40</div>
+    <div class="card">50</div>
+</div>
+
+<div class="question" id="question"></div>
+
+</div>
+
+<script>
+
+const questions = [
+"Компьютердің негізгі енгізу құрылғысы қайсысы?",
+"Интернетте бейтаныс адам жеке мәлімет сұраса не істеу керек?",
+"Құпиясөз қандай болу керек?",
+"Интернеттен ақпарат іздеу үшін қандай бағдарлама қолданамыз?",
+"Саған сұрағымыз жоқ 😊"
+];
+
+let used = [];
+let currentIndex = -1;
+
+function startGame(){
+document.querySelector(".start").style.display="none";
+document.querySelector(".cards").style.display="flex";
+nextQuestion();
+}
+
+function nextQuestion(){
+
+// барлық сұрақ бітті
+if(used.length === questions.length){
+document.getElementById("question").style.display="block";
+document.getElementById("question").innerHTML="🎉 ОЙЫН АЯҚТАЛДЫ!";
+document.querySelector(".retry").style.display="inline-block";
+return;
+}
+
+let cards=document.querySelectorAll(".card");
+
+let count=0;
+
+let anim=setInterval(()=>{
+
+cards.forEach(c=>c.classList.remove("selected"));
+
+let r=Math.floor(Math.random()*5);
+cards[r].classList.add("selected");
+
+count++;
+
+if(count>20){
+clearInterval(anim);
+
+// жаңа (қайталанбайтын) индекс таңдау
+let available = [];
+
+for(let i=0;i<questions.length;i++){
+if(!used.includes(i)){
+available.push(i);
+}
+}
+
+currentIndex = available[Math.floor(Math.random()*available.length)];
+used.push(currentIndex);
+
+cards.forEach(c=>c.classList.remove("selected"));
+cards[currentIndex].classList.add("selected");
+
+document.getElementById("question").style.display="block";
+document.getElementById("question").innerHTML=questions[currentIndex];
+
+setTimeout(()=>{
+nextQuestion();
+},2000);
+}
+
+},120);
+
+}
+
+function restartGame(){
+used = [];
+currentIndex = -1;
+
+document.querySelector(".start").style.display="inline-block";
+document.querySelector(".retry").style.display="none";
+document.querySelector(".cards").style.display="none";
+document.getElementById("question").style.display="none";
+
+document.querySelectorAll(".card").forEach(c=>{
+c.classList.remove("selected");
+});
+}
+
+</script>
+
+</body>
+</html>
+```
